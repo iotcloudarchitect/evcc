@@ -1,0 +1,45 @@
+template: eastron-jaz0n
+products:
+  - brand: Eastron
+    description:
+      generic: SDM630-Modbus
+params:
+  - name: usage
+    choice: ["pv"]
+  - name: modbus
+    choice: ["rs485"]
+render: |
+  type: custom
+  {{- if eq .usage "pv" }}
+  power:
+    source: calc
+    add:
+    - source: modbus
+      {{- include "modbus" . | indent 4 }}
+      register:
+        address: 0x0C # 0x0C "Phase 1 power"
+        type: input
+        decode: float32
+      scale: -1
+    - source: modbus
+      {{- include "modbus" . | indent 4 }}
+      register:
+        address: 0x0E # 0x0E "Phase 2 power"
+        type: input
+        decode: float32
+      scale: -1
+    - source: modbus
+      {{- include "modbus" . | indent 4 }}
+      register:
+        address: 0x10 # 0x10 "Phase 3 power"
+        type: input
+        decode: float32
+      scale: -1
+  energy:
+    source: modbus
+    {{- include "modbus" . | indent 2 }}
+    register:
+      address: 74 # 0x4A "Total Export kWh"
+      type: input
+      decode: float32
+  {{- end }}
