@@ -46,6 +46,10 @@ func NewConfigurableFromConfig(ctx context.Context, other map[string]interface{}
 		return nil, fmt.Errorf("must have either price or forecast")
 	}
 
+	if err := cc.init(); err != nil {
+		return nil, err
+	}
+
 	var (
 		err       error
 		priceG    func() (float64, error)
@@ -87,8 +91,7 @@ func NewConfigurableFromConfig(ctx context.Context, other map[string]interface{}
 func (t *Tariff) run(forecastG func() (string, error), done chan error) {
 	var once sync.Once
 
-	tick := time.NewTicker(time.Hour)
-	for ; true; <-tick.C {
+	for tick := time.Tick(time.Hour); ; <-tick {
 		var data api.Rates
 		if err := backoff.Retry(func() error {
 			s, err := forecastG()
@@ -99,7 +102,7 @@ func (t *Tariff) run(forecastG func() (string, error), done chan error) {
 				return backoff.Permanent(err)
 			}
 			for i, r := range data {
-				data[i].Price = t.totalPrice(r.Price)
+				data[i].Price = t.totalPrice(r.Price, r.Start)
 			}
 			return nil
 		}, bo()); err != nil {
@@ -136,7 +139,7 @@ func (t *Tariff) priceRates() (api.Rates, error) {
 		res[i] = api.Rate{
 			Start: slot,
 			End:   slot.Add(time.Hour),
-			Price: t.totalPrice(price),
+			Price: t.totalPrice(price, slot),
 		}
 	}
 

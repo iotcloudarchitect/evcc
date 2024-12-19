@@ -338,7 +338,7 @@ func (site *Site) DumpConfig() {
 	// verify vehicle detection
 	if vehicles := site.Vehicles().Instances(); len(vehicles) > 1 {
 		for _, v := range vehicles {
-			if _, ok := v.(api.ChargeState); !ok {
+			if _, ok := v.(api.ChargeState); !ok && len(v.Identifiers()) == 0 {
 				site.log.WARN.Printf("vehicle '%s' does not support automatic detection", v.Title())
 			}
 		}
@@ -1082,12 +1082,11 @@ func (site *Site) Run(stopC chan struct{}, interval time.Duration) {
 	loadpointChan := make(chan updater)
 	go site.loopLoadpoints(loadpointChan)
 
-	ticker := time.NewTicker(interval)
 	site.update(<-loadpointChan) // start immediately
 
-	for {
+	for tick := time.Tick(interval); ; {
 		select {
-		case <-ticker.C:
+		case <-tick:
 			site.update(<-loadpointChan)
 		case lp := <-site.lpUpdateChan:
 			site.update(lp)
