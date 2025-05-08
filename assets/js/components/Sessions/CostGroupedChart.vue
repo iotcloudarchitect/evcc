@@ -14,8 +14,8 @@ import { Doughnut } from "vue-chartjs";
 import { DoughnutController, ArcElement, LinearScale, Legend, Tooltip } from "chart.js";
 import LegendList from "./LegendList.vue";
 import { registerChartComponents, commonOptions, tooltipLabelColor } from "./chartConfig";
-import formatter from "../../mixins/formatter";
-import colors from "../../colors";
+import formatter from "@/mixins/formatter";
+import colors from "@/colors";
 import { TYPES, GROUPS } from "./types";
 
 registerChartComponents([DoughnutController, ArcElement, LinearScale, Legend, Tooltip]);
@@ -86,9 +86,8 @@ export default {
 					...commonOptions.plugins,
 					tooltip: {
 						...commonOptions.plugins.tooltip,
-						mode: "index",
+						axis: "r",
 						position: "center",
-						intersect: false,
 						callbacks: {
 							label: (tooltipItem) => this.formatValue(tooltipItem.raw || 0),
 							labelColor: tooltipLabelColor(false),
