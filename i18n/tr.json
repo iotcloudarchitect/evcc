@@ -44,8 +44,12 @@
       "ocppLabel": "OCPP sunucusu URL'si",
       "switchsockets": "“Açılıp kapanabilen prizler”",
       "template": "Üretici",
-      "titleAdd": "Doldurma Cihazı Ekle",
-      "titleEdit": "Doldurma Cihazını Düzenle"
+      "titleAdd": {
+        "charging": "Doldurma Cihazı Ekle"
+      },
+      "titleEdit": {
+        "charging": "Doldurma Cihazını Düzenle"
+      }
     },
     "circuits": {
       "description": "Bir devreye bağlı tüm yük noktalarının toplamının, yapılandırılan güç ve akım limitlerini aşmamasını sağlar. Devreler, bir hiyerarşi oluşturacak şekilde iç içe yerleştirilebilir.",
@@ -113,6 +117,9 @@
       "batteryStorage": "“Batarya”",
       "solarSystem": "“Güneş Enerji Sistemi”"
     },
+    "editor": {
+      "loading": "YAML düzenleyici yükleniyor…"
+    },
     "eebus": {
       "description": "evcc'nin diğer EEBus cihazlarıyla iletişim kurmasını sağlayan yapılandırma.",
       "title": "EEBus"
@@ -130,6 +137,8 @@
     },
     "general": {
       "cancel": "İptal",
+      "customHelp": "evcc'nin eklenti sistemini kullanarak kullanıcı tanımlı bir cihaz oluştur.",
+      "customOption": "Kullanıcı tanımlı cihaz",
       "delete": "“Sil”",
       "docsLink": "Belgelere bak.",
       "experimental": "Deneysel",
@@ -155,6 +164,9 @@
       "description": "evcc'yi başka bir ev enerji yönetim sistemine bağla.",
       "title": "HEMS"
     },
+    "icon": {
+      "change": "değiştir"
+    },
     "influx": {
       "description": "Doldurma verilerini ve diğer ölçümleri InfluxDB'ye yazar. Verileri görselleştirmek için Grafana veya başka araçlar kullan.",
       "descriptionToken": "Nasıl oluşturulacağını öğrenmek için InfluxDB belgelerine göz at. https://docs.influxdata.com/influxdb/v2/admin/",
@@ -172,22 +184,31 @@
       "v2Support": "InfluxDB 2.x'e geri dön"
     },
     "loadpoint": {
-      "addCharger": "“Doldurma cihazı ekle”",
+      "addCharger": {
+        "charging": "“Doldurma cihazı ekle”"
+      },
       "addMeter": "“Ek doldurma sayacı ekle”",
       "cancel": "“İptal”",
-      "chargerError": "Bir şarj cihazının yapılandırılması gereklidir.",
-      "chargerLabel": "“Doldurma cihazı”",
+      "chargerError": {
+        "charging": "Bir şarj cihazının yapılandırılması gereklidir."
+      },
+      "chargerLabel": {
+        "charging": "“Doldurma cihazı”"
+      },
       "chargerPower11kw": "11 kW",
       "chargerPower11kwHelp": "6 ila 16 A akım aralığını kullanır.",
       "chargerPower22kw": "22 kW",
       "chargerPower22kwHelp": "6 ila 32 A akım aralığını kullanır.",
-      "chargerPowerCustom": "“diğeri”",
+      "chargerPowerCustom": "diğer",
       "chargerPowerCustomHelp": "Kendine özgü bir akım aralığı tanımla.",
       "chargerTypeLabel": "“Doldurma gücü”",
       "chargingTitle": "“Dolduruyor”",
+      "circuitHelp": "Güç ve akım limitlerinin aşılmaması için yük yönetim ataması.",
       "circuitLabel": "“Devre”",
       "circuitUnassigned": "“atanmamış”",
-      "defaultModeHelp": "Araç bağlandığında doldurma şekli.",
+      "defaultModeHelp": {
+        "charging": "Araç bağlandığında doldurma şekli."
+      },
       "defaultModeHelpKeep": "Son seçilen doldurma şeklini korur.",
       "defaultModeLabel": "“Varsayılan şekil”",
       "delete": "“Sil”",
@@ -255,6 +276,7 @@
       "addVehicle": "Araç ekle",
       "configured": "yapılandırıldı",
       "edit": "düzenle",
+      "loadpointRequired": "En az bir doldurma noktası yapılandırılmalı.",
       "name": "“İsim”",
       "title": "Yapılandırma",
       "unconfigured": "yapılandırılmadı",
@@ -268,6 +290,7 @@
     "meter": {
       "cancel": "İptal",
       "delete": "Sil",
+      "generic": "Genel bütünleşmeler",
       "option": {
         "aux": "Kendi kendini düzenleyen tüketici ekle",
         "battery": "Pil ölçer ekle",
@@ -275,6 +298,7 @@
         "pv": "Güneş ölçer ekle"
       },
       "save": "Kaydet",
+      "specific": "Özel bütünleşmeler",
       "template": "Üretici",
       "titleChoice": "Ne Eklemek İstersin?",
       "validateSave": "Doğrula ve kaydet"
@@ -416,6 +440,7 @@
       "minimumCurrent": "“Asgari akım”",
       "minimumCurrentHelp": "Yalnızca ne yaptığını biliyorsan 6A'in altına in.",
       "online": "Çevrimiçi API'ye sahip araçlar",
+      "primary": "Genel bütünleşmeler",
       "priority": "“Öncelik”",
       "priorityHelp": "Daha yüksek öncelik, bu araç güneş enerjisi fazlasına öncelikli erişim sağlayacak demektir.",
       "save": "Kaydet",
@@ -568,6 +593,7 @@
   },
   "loginModal": {
     "cancel": "İptal",
+    "demoMode": "Demo modunda oturum açamazsınız.",
     "error": "Giriş başarısız: ",
     "iframeHint": "evcc'yi yeni bir sekmede aç.",
     "iframeIssue": "Parolan doğru, ancak tarayıcın kimlik doğrulama çerezini reddetti. Bu, evcc'yi HTTP üzerinden bir iframe içinde çalıştırırsan meydana gelebilir.",
@@ -861,10 +887,9 @@
       "solarpercentage": "Güneş (%)",
       "vehicle": "Araç"
     },
-    "csvMonth": "{month} CSV olarak indir",
+    "csvPeriod": "{period} CSV olarak indir",
     "csvTotal": "CSV'nin tamamını indir",
     "date": "Başlangıç",
-    "downloadCsv": "CSV olarak indir",
     "energy": "Doldurulan",
     "filter": {
       "allLoadpoints": "tüm doldurma noktaları",
@@ -931,6 +956,11 @@
       "label": "Görünüm",
       "light": "Aydınlık"
     },
+    "time": {
+      "12h": "12saat",
+      "24h": "24saat",
+      "label": "Saat biçimi"
+    },
     "title": "Genel Ayarlar",
     "unit": {
       "km": "km",
@@ -939,7 +969,7 @@
     }
   },
   "smartCost": {
-    "activeHours": "{total} saat içinde {charging}",
+    "activeHours": "{total} saat içinde {active}",
     "activeHoursLabel": "Aktif saatler",
     "applyToAll": "Heryerde uygulansın mı?",
     "batteryDescription": "Ev enerji deposunu şebekeden doldurur.",

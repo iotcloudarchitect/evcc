@@ -42,8 +42,27 @@
 				equal-width
 			/>
 		</FormRow>
+		<FormRow id="settingsTimeFormat" :label="$t('settings.time.label')">
+			<SelectGroup
+				id="settingsTimeFormat"
+				v-model="timeFormat"
+				class="w-75"
+				transparent
+				:options="
+					TIME_FORMATS.map((value) => ({
+						value,
+						name: $t(`settings.time.${value}h`),
+					}))
+				"
+				equal-width
+			/>
+		</FormRow>
 		<FormRow id="telemetryEnabled" :label="$t('settings.telemetry.label')">
-			<TelemetrySettings :sponsorActive="sponsor && !!sponsor.name" class="mt-1 mb-0" />
+			<TelemetrySettings
+				:sponsorActive="sponsor && !!sponsor.name"
+				:telemetry="telemetry"
+				class="mt-1 mb-0"
+			/>
 		</FormRow>
 		<FormRow id="hiddenFeaturesEnabled" :label="`${$t('settings.hiddenFeatures.label')} 🧪`">
 			<div class="form-check form-switch my-1">
@@ -80,29 +99,40 @@
 import TelemetrySettings from "../TelemetrySettings.vue";
 import FormRow from "../Helper/FormRow.vue";
 import SelectGroup from "../Helper/SelectGroup.vue";
-import { getLocalePreference, setLocalePreference, LOCALES, removeLocalePreference } from "@/i18n";
-import { getThemePreference, setThemePreference, THEMES } from "@/theme";
-import { getUnits, setUnits, UNITS } from "@/units";
-import { getHiddenFeatures, setHiddenFeatures } from "@/featureflags";
+import {
+	getLocalePreference,
+	setLocalePreference,
+	LOCALES,
+	removeLocalePreference,
+} from "@/i18n.ts";
+import { getThemePreference, setThemePreference } from "@/theme.ts";
+import { getUnits, setUnits, is12hFormat, set12hFormat } from "@/units";
+import { getHiddenFeatures, setHiddenFeatures } from "@/featureflags.ts";
 import { isApp } from "@/utils/native";
 import { defineComponent, type PropType } from "vue";
-import type { Sponsor } from "@/types/evcc";
+import { LENGTH_UNIT, THEME, type Sponsor } from "@/types/evcc";
+
+const TIME_12H = "12";
+const TIME_24H = "24";
 
 export default defineComponent({
 	name: "UserInterfaceSettings",
 	components: { TelemetrySettings, FormRow, SelectGroup },
 	props: {
 		sponsor: Object as PropType<Sponsor>,
+		telemetry: Boolean,
 	},
 	data() {
 		return {
 			theme: getThemePreference(),
 			language: getLocalePreference() || "",
 			unit: getUnits(),
+			timeFormat: is12hFormat() ? TIME_12H : TIME_24H,
 			hiddenFeatures: getHiddenFeatures(),
 			fullscreenActive: false,
-			THEMES,
-			UNITS,
+			THEMES: Object.values(THEME),
+			UNITS: Object.values(LENGTH_UNIT),
+			TIME_FORMATS: [TIME_24H, TIME_12H],
 		};
 	},
 	computed: {
@@ -126,6 +156,9 @@ export default defineComponent({
 		unit(value) {
 			setUnits(value);
 		},
+		timeFormat(value) {
+			set12hFormat(value === TIME_12H);
+		},
 		theme(value) {
 			setThemePreference(value);
 		},
@@ -134,7 +167,8 @@ export default defineComponent({
 		},
 		language(value) {
 			const i18n = this.$root?.$i18n;
-			if (value) {
+			if (!i18n) return;
+			else if (value) {
 				setLocalePreference(i18n, value);
 			} else {
 				removeLocalePreference(i18n);

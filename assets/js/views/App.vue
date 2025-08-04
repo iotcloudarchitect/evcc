@@ -7,7 +7,7 @@
 		<ForecastModal v-bind="forecastModalProps" />
 		<HelpModal />
 		<PasswordModal />
-		<LoginModal />
+		<LoginModal v-bind="loginModalProps" />
 		<OfflineIndicator v-bind="offlineIndicatorProps" />
 	</div>
 </template>
@@ -53,8 +53,7 @@ export default {
 		return { reconnectTimeout: null, ws: null, authNotConfigured: false };
 	},
 	head() {
-		const siteTitle = store.state.siteTitle;
-		return { title: siteTitle ? `${siteTitle} | evcc` : "evcc" };
+		return { title: "...", titleTemplate: "%s | evcc" };
 	},
 	computed: {
 		version() {
@@ -74,6 +73,9 @@ export default {
 		},
 		forecastModalProps() {
 			return this.collectProps(ForecastModal, store.state);
+		},
+		loginModalProps() {
+			return this.collectProps(LoginModal, store.state);
 		},
 	},
 	watch: {

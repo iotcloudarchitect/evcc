@@ -89,6 +89,7 @@
 						v-if="filteredLines.length"
 						class="d-block evcc-default-text flex-grow-1"
 						data-testid="log-content"
+						@copy="onCopy"
 					>
 						<div
 							v-for="{ line, className, key } in lineEntries"
@@ -141,6 +142,9 @@ export default {
 			levels: LEVELS,
 			busy: false,
 		};
+	},
+	head() {
+		return { title: this.$t("log.title") };
 	},
 	computed: {
 		filteredLines() {
@@ -225,7 +229,7 @@ export default {
 						count: showAll ? null : DEFAULT_COUNT,
 					},
 				});
-				this.lines = response.data?.result || [];
+				this.lines = response.data || [];
 				this.$nextTick(() => {
 					if (showAll) {
 						this.scrollToTop();
@@ -254,7 +258,7 @@ export default {
 		async updateAreas() {
 			try {
 				const response = await api.get("/system/log/areas");
-				this.availableAreas = response.data?.result || [];
+				this.availableAreas = response.data || [];
 			} catch (e) {
 				console.error(e);
 			}
@@ -297,6 +301,11 @@ export default {
 		},
 		changeAreas(areas) {
 			this.updateQuery({ areas });
+		},
+		onCopy(event) {
+			const selection = window.getSelection().toString();
+			event.clipboardData.setData("text/plain", "```\n" + selection + "\n```");
+			event.preventDefault();
 		},
 	},
 };
