@@ -6,7 +6,6 @@ import (
 	"crypto/x509"
 	"fmt"
 	"math/rand/v2"
-	"strings"
 	"sync"
 	"time"
 
@@ -52,18 +51,19 @@ type Client struct {
 
 type Option func(*paho.ClientOptions)
 
-const secure = "tls://"
+const secure = "mqtts://"
 
 // NewClient creates new Mqtt publisher
 func NewClient(log *util.Logger, broker, user, password, clientID string, qos byte, insecure bool, caCert, clientCert, clientKey string, opts ...Option) (*Client, error) {
-	broker, isSecure := strings.CutPrefix(broker, secure)
+	/*
+		broker, isSecure := strings.CutPrefix(broker, secure)
 
-	// strip schema as it breaks net.SplitHostPort
-	broker = util.DefaultPort(broker, 1883)
-	if isSecure {
-		broker = secure + broker
-	}
-
+		// strip schema as it breaks net.SplitHostPort
+		broker = util.DefaultPort(broker, 1883)
+		if isSecure {
+			broker = secure + broker
+		}
+	    ‚*/
 	mc := &Client{
 		log:      log,
 		Qos:      qos,
