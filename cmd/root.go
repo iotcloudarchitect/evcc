@@ -252,20 +252,23 @@ func runRoot(cmd *cobra.Command, args []string) {
 		err = configureMDNS(conf.Network)
 	}
 
+	// start SHM server
+	if err == nil {
+		err = wrapErrorWithClass(ClassSHM, configureSHM(&conf.SHM, site, httpd))
+	}
+
 	// start HEMS server
 	if err == nil {
-		err = wrapErrorWithClass(ClassHEMS, configureHEMS(&conf.HEMS, site, httpd))
+		err = wrapErrorWithClass(ClassHEMS, configureHEMS(&conf.HEMS, site))
 	}
 
 	// setup MCP
 	if viper.GetBool("mcp") {
-		const path = "/mcp"
-		local := conf.Network.URI()
 		router := httpd.Router()
 
 		var handler http.Handler
-		if handler, err = mcp.NewHandler(router, local, path); err == nil {
-			router.PathPrefix(path).Handler(handler)
+		if handler, err = mcp.NewHandler(router); err == nil {
+			router.PathPrefix("/mcp").Handler(handler)
 		}
 	}
 
@@ -279,6 +282,7 @@ func runRoot(cmd *cobra.Command, args []string) {
 	// publish initial settings
 	valueChan <- util.Param{Key: keys.EEBus, Val: conf.EEBus.Configured()}
 	valueChan <- util.Param{Key: keys.Hems, Val: conf.HEMS}
+	valueChan <- util.Param{Key: keys.Shm, Val: conf.SHM}
 	valueChan <- util.Param{Key: keys.Influx, Val: conf.Influx}
 	valueChan <- util.Param{Key: keys.Interval, Val: conf.Interval}
 	valueChan <- util.Param{Key: keys.Messaging, Val: conf.Messaging.Configured()}

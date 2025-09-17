@@ -65,7 +65,8 @@
     },
     "circuits": {
       "description": "Varmistaa, että kaikkien piiriin kytkettyjen kuormituspisteiden summa ei ylitä määritettyjä teho- ja virtarajoja. Piirejä voi rakentaa sisäkkäin.",
-      "title": "Kuormanhallinta"
+      "title": "Kuormanhallinta",
+      "usableMeters": "Käytettävissä olevat mittarit"
     },
     "control": {
       "description": "Yleensä oletusarvot ovat sopivat. Muuta vain jos tiedät mitä olet tekemässä.",
@@ -98,7 +99,8 @@
       "feedinPrice": "Sähköverkkoon myynninhinta",
       "gridPrice": "Verkosta ostonhinta",
       "heaterTempLimit": "Lämmityksen raja",
-      "hemsType": "Järjestelmä",
+      "hemsActiveLimit": "Aktiivinen raja",
+      "hemsType": "Kommunikaatiomenetelmä",
       "identifier": "RFID-tunniste",
       "no": "ei",
       "odometer": "Matkamittari",
@@ -123,6 +125,10 @@
       "A": "A (ei yhdistetty)",
       "B": "B (yhdistetty)",
       "C": "C (lataa)"
+    },
+    "deviceValueHemsType": {
+      "eebus": "EEBusilla",
+      "relay": "Relayllä"
     },
     "devices": {
       "auxMeter": "Älykkään virranhallinnan laite",
@@ -155,12 +161,15 @@
       "docsLink": "Katso dokumentaatio.",
       "experimental": "Kokeellinen",
       "hideAdvancedSettings": "Piilota edistyneet asetukset",
+      "invalidFileSelected": "Valittu virheellinen tiedosto",
+      "noFileSelected": "Ei valittua tiedostoa.",
       "off": "pois",
       "on": "päällä",
       "password": "Salasana",
       "readFromFile": "Lue tiedostosta",
       "remove": "Poista",
       "save": "Tallenna",
+      "selectFile": "Selaa",
       "showAdvancedSettings": "Näytä edistyneet asetukset",
       "telemetry": "Telemetria",
       "templateLoading": "Ladataan...",
@@ -173,7 +182,7 @@
       "titleEdit": "Muokkaa sähköverkonmittaria"
     },
     "hems": {
-      "description": "Yhdistä evcc toiseen kodin energianhallintajärjestelmään.",
+      "description": "Ulkoisen järjestelmän (kuten EnWG kontrolleri) asettama tehon rajoitus. Vaatii kuormanhallinnan määrittämistä.",
       "title": "HEMS"
     },
     "icon": {
@@ -426,15 +435,52 @@
       "addToken": "Anna tunnus",
       "changeToken": "Vaihda tunnus",
       "description": "Sponsorointi auttaa meitä ylläpitämään projektia ja rakentamaan kestävästi uusia ja jännittäviä ominaisuuksia. Sponsorina saat käyttöösi kaikki latureiden toteutukset.",
-      "descriptionToken": "Saat tunnuksen osoitteesta {url}. Tarjoamme myös kokeilutunnuksen testausta varten.",
+      "descriptionToken": "Sponsorit saavat sponsorointitunnuksensa osoitteesta {url}. Päästäksesi alkuun tarjoamme {trialToken}.",
+      "enterYourToken": "Syötä sponsorointitunnuksesi",
       "error": "Sponsoritunnus ei kelpaa.",
+      "invalid": "epäkelpo",
       "labelToken": "Sponsoritunnus",
       "title": "Sponsorointi",
       "tokenRequired": "Sinun on määritettävä sponsoritunnus ennen kuin voit luoda tämän laitteen.",
       "tokenRequiredLearnMore": "Lisätietoja.",
-      "trialToken": "Kokeilutunnus"
+      "tokenRequiredShort": "Sponsorointi-tokenia ei ole määritelty.",
+      "trialToken": "kokeilutunnus",
+      "viaYaml": "evcc.yaml-tiedoston mukaisesti",
+      "yourToken": "Sponsorointitunnuksesi"
     },
     "system": {
+      "backupRestore": {
+        "backup": {
+          "action": "Ladataan varmuuskopiota...",
+          "confirmationButton": "Lataa varmuuskopio",
+          "confirmationText": "Syötä salasanasi ladataksesi tietokantatiedoston.",
+          "description": "Varmuuskopioi tietosi. Tätä tiedostoa voidaan käyttää palauttamaan tietosi järjestelmävirheen jälkeen.",
+          "title": "Varmuuskopio"
+        },
+        "cancel": "Peruuta",
+        "description": "Varmuuskopioi, palauta ja nollaa tietosi. Hyödyllinen jos haluat siirtää tietosi toiseen järjestelmään.",
+        "note": "Huomioi: Kaikki ylläolevat toiminnut vaikuttavat vain tietokannassa oleviin tietoihin. evcc.yaml-tiedoston määrittelyt pysyvät muuttumattomina.",
+        "reset": {
+          "action": "Nollaa...",
+          "confirmationButton": "Nollaa ja käynnistä uudelleen",
+          "confirmationText": "Tämä poistaa pysyvästä valitut tiedot. Varmista, että olet ensin ladannut varmuuskopion.",
+          "description": "Onko ongelmia määrittelyn kanssa ja haluat aloittaa alusta? Poista kaikki tiedot ja aloita puhtaalta pöydältä.",
+          "sessions": "Lataustapahtumat",
+          "sessionsDescription": "Poistaa lataustapahtumahistorian.",
+          "settings": "Määrittelyt ja asetukset",
+          "settingsDescription": "Poistaa kaikki määritellyt laitteet, palvelut, välimuistitiedon jne.",
+          "title": "Nollaa"
+        },
+        "restore": {
+          "action": "Palauta...",
+          "confirmationButton": "Palauta ja uudelleenkäynnistä",
+          "confirmationText": "Tämä ylikirjoittaa kaikki tietokannassa olevat tiedot. Varmista, että olet ensin ladannut tietojen varmuuskopion.",
+          "description": "Palauta tietosi varmuuskopiotiedostosta. Tämä ylikirjoittaa kaikki tietosi.",
+          "labelFile": "Varmuuskopiotiedosto",
+          "title": "Palauta"
+        },
+        "title": "Varmuuskopiointi ja palautus"
+      },
       "logs": "Logi",
       "restart": "Käynnistä uudelleen",
       "restartRequiredDescription": "Ole hyvä ja käynnistä uudelleen, jotta näet muutoksen.",
@@ -584,6 +630,10 @@
   },
   "header": {
     "about": "Tietoa",
+    "authProviders": {
+      "confirmLogout": "Oletko varma, että haluat poistaa yhteyden {title}?",
+      "title": "Autentikointivaltuutuksen tila"
+    },
     "blog": "Blogi",
     "docs": "Dokumentaatio",
     "github": "GitHub",
@@ -634,7 +684,7 @@
     "iframeIssue": "Salasanasi on oikea, mutta selaimesi näyttää pudonneen todennusevästeen. Näin voi käydä, jos suoritat evcc:n iframe-kehyksessä HTTP:n kautta.",
     "invalid": "Salasana ei kelpaa.",
     "login": "Kirjaudu",
-    "password": "Salasana",
+    "password": "Hallintasalasana",
     "reset": "Määritä salasana uudelleen?",
     "title": "Vahvistus"
   },
@@ -678,6 +728,7 @@
       "gridImport": "Kulutus sähköverkosta",
       "homePower": "Kodin sähkönkulutus",
       "loadpoints": "Latauslaite| Latauslaite | {count} latauslaitetta",
+      "loadpointsLimit": "{limit} rajoitus",
       "noEnergy": "Ei mittarin tietoja",
       "pv": "Aurinkosähköjärjestelmä",
       "pvExport": "Sähköverkkoon vienti",
@@ -689,6 +740,10 @@
       "connected": "Valmiustila.",
       "vehicleLimit": "Lämmittimen rajoitin",
       "waitForVehicle": "Valmiina. Odottaa lämmitintä…"
+    },
+    "hemsWarning": {
+      "description": "Rajoitettu latausta, jotta rajaa {limit} ei ylitettäisi.",
+      "title": "Ulkoinen raja:"
     },
     "loadpoint": {
       "avgPrice": "⌀ Hinta",
