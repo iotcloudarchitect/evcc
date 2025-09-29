@@ -1231,11 +1231,22 @@ func (lp *Loadpoint) scalePhases(phases int) error {
 
 // fastCharging scales to 3p if available and sets maximum current
 func (lp *Loadpoint) fastCharging() error {
-	err := lp.scalePhasesIfAvailable(3)
-	if err == nil {
-		err = lp.setLimit(lp.effectiveMaxCurrent())
+	if lp.hasPhaseSwitching() {
+		phases := 3
+		maxPower1p := Voltage * lp.effectiveMaxCurrent()
+
+		// load management limit active
+		if circuitMaxPower := circuitMaxPower(lp.circuit); circuitMaxPower > 0 && circuitMaxPower < 1.1*maxPower1p {
+			phases = 1
+			lp.log.DEBUG.Printf("fast charging: scaled to 1p to match %.0fW max circuit power", circuitMaxPower)
+		}
+
+		if err := lp.scalePhasesIfAvailable(phases); err != nil {
+			return err
+		}
 	}
-	return err
+
+	return lp.setLimit(lp.effectiveMaxCurrent())
 }
 
 // pvScalePhases switches phases if necessary and returns number of phases switched to
@@ -1290,7 +1301,7 @@ func (lp *Loadpoint) pvScalePhases(sitePower, minCurrent, maxCurrent float64) in
 
 	// scale up phases
 	if targetCurrent := powerToCurrent(availablePower, maxPhases); targetCurrent >= minCurrent && scalable {
-		lp.log.DEBUG.Printf("available power %.0fW > %.0fW min %dp threshold", availablePower, 3*Voltage*minCurrent, maxPhases)
+		lp.log.DEBUG.Printf("available power %.0fW > %.0fW min %dp threshold", availablePower, float64(maxPhases)*Voltage*minCurrent, maxPhases)
 
 		if !lp.charging() { // scale immediately if not charging
 			lp.phaseTimer = elapsed
