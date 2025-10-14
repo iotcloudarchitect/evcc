@@ -185,6 +185,12 @@ type SocLimiter interface {
 	GetLimitSoc() (int64, error)
 }
 
+// Dimmer provides §14a dimming
+type Dimmer interface {
+	Dimmed() (bool, error)
+	Dim(bool) error
+}
+
 // ChargeController allows to start/stop the charging session on the vehicle side
 type ChargeController interface {
 	ChargeEnable(bool) error
@@ -203,9 +209,9 @@ type Tariff interface {
 
 // AuthProvider is the ability to provide OAuth authentication through the ui
 type AuthProvider interface {
-	Login(state string) string
+	Login(state string) (string, error)
 	Logout() error
-	HandleCallback(responseValues url.Values) error
+	HandleCallback(params url.Values) error
 	Authenticated() bool
 	DisplayName() string
 }
@@ -258,6 +264,10 @@ type Circuit interface {
 	Update([]CircuitLoad) error
 	ValidateCurrent(old, new float64) float64
 	ValidatePower(old, new float64) float64
+
+	// §14a
+	Dim(bool)
+	Dimmed() bool
 }
 
 // Redactor is an interface to redact sensitive data
